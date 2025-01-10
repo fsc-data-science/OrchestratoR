@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+/* General styles */
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  color: #000000;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+/* Header and title styles */
+.header-logo img {
+  max-height: 80px;
+  margin-bottom: 10px;
+}
+
+.main-title {
+  font-size: 2.5em;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  color: #000000;
+}
+
+.subtitle, .date {
+  font-size: 1.1em;
+  color: #333333;
+  margin-bottom: 3px;
+}
+
+/* Heading styles */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  color: #000000;
+}
+
+h1 {
+  font-size: 2em;
+  border-bottom: 1px solid #cccccc;
+  padding-bottom: 0.3em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+/* Table of Contents styles */
+#TOC {
+  background-color: #fffff1;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+#TOC::before {
+  content: "Table of Contents";
+  font-weight: bold;
+  font-size: 1.1em;
+  display: block;
+  border-bottom: 1px solid #cccccc;
+  color: #000000;
+}
+
+#TOC ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+#TOC a {
+  color: #000000;
+  text-decoration: none;
+}
+
+#TOC a:hover {
+  text-decoration: underline;
+}
+
+/* Style for active TOC item */
+#TOC li.active > a {
+  font-weight: bold;
+}
+
+/* Style for level 1 headings in TOC */
+#TOC > ul > li > a {
+  font-weight: 500;
+}
+
+/* Style for level 2 headings in TOC */
+#TOC > ul > li > ul > li > a {
+  font-size: 0.95em;
+  color: #333333;
+}
+
+/* Code folding button */
+.code-folding-btn {
+  margin-bottom: 4px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+  
+  .main-title {
+    font-size: 2em;
+  }
+  
+  h1 {
+    font-size: 1.8em;
+  }
+  
+  h2 {
+    font-size: 1.3em;
+  }
+}

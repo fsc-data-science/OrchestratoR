@@ -11,11 +11,12 @@ library(scales)
 library(reactable)
 library(rmarkdown)
 library(knitr)
+source("extract_code.R")
 
 flipai_secret <- readLines("flipai_secret.txt")
 snowflake_credentials <- jsonlite::read_json('snowflake-details.json')
 
-submitSnowflake <- function(query, creds){
+submitSnowflake <- function(query, creds = snowflake_credentials){
   
   connection <- dbConnect(
     odbc::odbc(),
@@ -35,7 +36,7 @@ submitSnowflake <- function(query, creds){
 }
 
 ask_flipai <- function(url_ = "https://flip-ai.fly.dev/api/agent/execute",
-                       api_key, 
+                       api_key = flipai_secret, 
                        slug, 
                        messages = NULL, 
                        content = NULL) {
@@ -95,5 +96,21 @@ ask_flipai <- function(url_ = "https://flip-ai.fly.dev/api/agent/execute",
   )
   
   return(parsed_response)
+}
+
+add_message <- function(messages = list(), roles, contents) {
+  if (length(roles) != length(contents)) {
+    stop("Length of roles must match length of contents")
+  }
+  
+  new_messages <- messages
+  for (i in seq_along(roles)) {
+    new_messages[[length(new_messages) + 1]] <- list(
+      role = roles[i],
+      content = contents[i]
+    )
+  }
+  
+  return(new_messages)
 }
 

@@ -82,11 +82,12 @@ run_orchestrator <- function(input, max_tokens = 100000) {
       
       tryCatch({
         # List all JSON files in directory
-        json_files <- list.files(
+        json_files <- sort(list.files(
           path = suggested_names$directory_name, 
           pattern = "\\.json$", 
           full.names = TRUE
-        )
+        ))
+        
         
         # Filter out snowflake-details.json
         json_files <- json_files[!grepl("snowflake-details\\.json$", json_files)]
@@ -145,11 +146,11 @@ run_orchestrator <- function(input, max_tokens = 100000) {
           )
           
           # Try the write and render process again
-          json_files <- list.files(
+          json_files <- sort(list.files(
             path = suggested_names$directory_name, 
             pattern = "\\.json$", 
             full.names = TRUE
-          )
+          ))
           json_files <- json_files[!grepl("snowflake-details\\.json$", json_files)]
           
           output_file <- file.path("output-reports", 

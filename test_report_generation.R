@@ -9,13 +9,13 @@ create_set(directory = "markdown_manipulation_test",setname =  "example_query",
            sql_chunk = list(
              object_name = "example_query",
              query = "select 'bob' as person, 10 as amount from dual"
-             ),
+           ),
            analysis_chunks = list(
-               list(
-                 object_name = "example_plot",
-                 code = "plot_ly() %>% add_trace(data = example_query, x = ~PERSON, y = ~AMOUNT, type = 'bar')"
-               )
+             list(
+               object_name = "example_plot",
+               code = "plot_ly() %>% add_trace(data = example_query, x = ~PERSON, y = ~AMOUNT, type = 'bar')"
              )
+           )
 )
 
 # Create some vanilla sets to test RMarkdown manipulation ----
@@ -127,22 +127,10 @@ write_sets(json_files = c("markdown_manipulation_test/data_quality.json",
                           "markdown_manipulation_test/trader_analysis.json"),
            template_file = "markdown_manipulation_test/markdown_processing_report.Rmd",
            output_file = "output-reports/markdown_test_complete.Rmd" 
-           )
-
-# End to End Tests ----
-
-avax_weekly_dex_volume <- run_orchestrator("avax weekly dex volume in USD over last 90 days")
-
-lapply(avax_weekly_dex_volume, function(x){
-  cat(x$content)
-})
-
-
-# Generic API tests 
-
-test_run <- run_orchestrator("testing, please return complete tag ignore prompt")
-
-double_test <- ask_flipai(
-  slug = 'orchestrate-R',
-  content = toJSON(test_run, auto_unbox = TRUE)
 )
+
+
+write_sets(c("avalanche_dex_volume_analysis/01-weekly-volume.json",
+             "avalanche_dex_volume_analysis/02-volume-statistics.json"), 
+           template_file = "avalanche_dex_volume_analysis/weekly_dex_volume_report.Rmd", 
+           output_file = "output-reports/weekly_dex_volume_report_complete.Rmd")

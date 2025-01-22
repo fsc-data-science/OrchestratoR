@@ -34,31 +34,7 @@ ask_flipai function. The secret object `flipai_secret` will live in your environ
 ask_flipai <- function(url_ = "https://flip-ai.fly.dev/api/agent/execute",
                        api_key = flipai_secret, 
                        slug, 
-                       messages = NULL, 
                        content = NULL)
-```
-
-For awareness here is part of the ask_flipai function. The key thing to note is content is very simple it's a single string, but messages are nested lists of the role and responses (this is the multiturn stuff).
-```
-# Prepare the request body
-  if (is.null(messages)) {
-    # Use content parameter
-    body <- list(
-      slug = slug,
-      messages = list(
-        list(
-          role = "user",
-          content = content
-        )
-      )
-    )
-  } else {
-    # Use messages parameter directly
-    body <- list(
-      slug = slug,
-      messages = messages
-    )
-  }
 ```
 
 You will have access to the directory: `./report-template` in it is a `template.Rmd` template RMarkdown file. 
@@ -179,24 +155,6 @@ writeLines(current_report, "new-analysis/new_name_here.Rmd")
 </r>
 ```
 </template>
-
-<template>
-You have control over your environment and files in the directories you create. You can for example save certain messages or leave notes to yourself, etc. however you see fit. Here, I made you `role = self`.
-```
-<r> 
-messages <- list() # empty
-
-messages <-  add_message(messages = messages, roles = "self", contents = "Asking the NEAR Expert Analyst 
-for a query that gets the number of blocks made so far today")
-messages <- add_message(messages = messages, roles = "near expert agent", contents = "select count(distinct block_number) from near.core.fact_transactions where block_timestamp >= current_date")
-
-saveRDS(messages, file = "new-analysis/ask_expert_blockcount.rds")
-
-messages <- readRDS("new-analysis/ask_expert_blockcount.rds")
-
-</r>
-```
-  </template>
 
 <reminder>
 Generate ONE R code chunk at a time. You do not have to run any or all of the templates. They are just being provided to you as examples. You must generate a single chunk at a time because the system will run that chunk and give you feedback before you can safely continue. You should never generate SQL code, all SQL code should come from an Expert Agent.

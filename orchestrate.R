@@ -8,19 +8,19 @@ run_orchestrator <- function(input, max_tokens = 100000) {
   messages_ <- list(
     list(
       role = "user",
-      content = paste0("Here is the user request: ", input, "\n", 
-                       "Please note the directory and new template have already been made for you here, directory:", 
-                       suggested_names$directory_name, "\n",
-                       "Report file: ", suggested_names$report_file_name,".Rmd", "\n", 
+      content = paste0("Here is the user request: ", input, "\n ", 
+                       "Please note the directory and new template have already been made for you here, directory: ", 
+                       suggested_names$directory_name, " \n ",
+                       "Report file: ", suggested_names$report_file_name,".Rmd", " \n ", 
                        "The report has already been given the title: ", 
                        suggested_names$report_title)
     )
   )
   
-  report_path <- paste0(suggested_names$directory_names,"/",suggested_names$report_file_name)
+  report_path <- paste0(suggested_names$directory_name,"/",suggested_names$report_file_name, ".Rmd")
     
   temp_report <- readLines(report_path)
-  temp_report[2] <- paste0("title: ", suggested_names$report_title)
+  temp_report[2] <- paste0("title: ", '"', suggested_names$report_title, '"')
   writeLines(temp_report, report_path)
 
   # Note this is Orchestrator token budget, it does not include budgets for 
@@ -103,10 +103,15 @@ run_orchestrator <- function(input, max_tokens = 100000) {
         }
         
         # Define input and output files
-        template_file <- file.path(suggested_names$directory_name, 
-                                   paste0(suggested_names$report_file_name, ".Rmd"))
-        output_file <- file.path("output-reports", 
-                                 paste0(suggested_names$report_file_name, "_complete.Rmd"))
+        template_file <- file.path(paste0(suggested_names$directory_name,
+                                          "/",
+                                   suggested_names$report_file_name,
+                                   ".Rmd"))
+        
+        output_file <- file.path(paste0(suggested_names$directory_name,
+                                        "/",
+                                        suggested_names$report_file_name,
+                                        "_complete.Rmd"))
         
         # Write combined sets
         write_sets(

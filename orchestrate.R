@@ -2,36 +2,8 @@ source("libraries.R")
 
 run_orchestrator <- function(input, max_tokens = 100000) {
 
-  # List all files in template directory
-  files_ <- list.files("report-template", full.names = TRUE)
-  
-  suggested_names <- ask_flipai(slug = "json-responder",
-             content =  paste0(
-               "Using the following user request to create 3 file names directory_name, report_file_name, report_title. No file types needed just the 3 names in JSON: ",
-               input
-               )
-             )
-  
-  tryCatch(
-    {
-  suggested_names <- fromJSON(suggested_names$text)
-      }, 
-           error = function(e) {
-             stop("can't even get file names structured right lol")
-             }
-           )
-  
-  # Create new directory
-  dir.create(suggested_names$directory_name)
-  
-  # Copy files to new directory
-  file.copy(files, suggested_names$directory_name)
-  
-  file.rename(
-    from = paste0(suggested_names$directory_name, "/template.Rmd"),
-    to = paste0(suggested_names$directory_name,"/", suggested_names$report_file_name, ".Rmd")
-  )
-  
+ suggested_names <- make_directory(input)
+ 
   # Initialize message history with user input
   messages_ <- list(
     list(
@@ -104,11 +76,48 @@ run_orchestrator <- function(input, max_tokens = 100000) {
     # Check for completion signal
     if (grepl("<COMPLETE>", response_$text)) {
       
-      rmarkdown::render(paste0(suggested_names$directory_name,"/",suggested_names$report_file_name,".Rmd"),
-                        output_format = "html_document",
-                        output_dir = "output-reports")
-      
-      break
+      tryCatch({
+        # Try to render
+        rmarkdown::render(paste0(suggested_names$directory_name,"/",suggested_names$report_file_name,".Rmd"),
+                          output_format = "html_document", 
+                          output_dir = "output-reports")
+        break
+        
+      }, error = function(e) {
+        # On error, read the full report
+        current_report <- readLines(paste0(suggested_names$directory_name,"/",suggested_names$report_file_name,".Rmd"))
+        report_text <- paste0(current_report, collapse = "\n")
+        
+        # Ask orchestrator to review and fix
+        fix_response <- ask_flipai(
+          slug = "orchestrate-R",
+          content = paste0(
+            "Error rendering report: ", e$message, "\n",
+            "Please review this RMarkdown file, identify any issues, and provide a single code block to fix them:\n\n",
+            report_text
+          )
+        )
+        
+        # Extract and run fix code if provided
+        fix_code <- extract_r_code(fix_response$text)
+        if (!is.null(fix_code)) {
+          result <- local_run_r_code(fix_code)
+          
+          # Add fix attempt to message history
+          messages_ <- add_message(
+            messages = messages_,
+            roles = "orchestrator",
+            contents = paste0("Fix attempt: ", fix_response$text)
+          )
+          
+          # Try render again
+          rmarkdown::render(paste0(suggested_names$directory_name,"/",suggested_names$report_file_name,".Rmd"),
+                            output_format = "html_document",
+                            output_dir = "output-reports")
+        }
+        
+        break
+      })
     }
     
     # Check token budget

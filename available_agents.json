@@ -3,7 +3,7 @@
     {
       "name": "Data Science Pyramid Expert",
       "slug": "data-science-pyramid",
-      "capabilities": "Analyzes project insights, suggests additional analyses, and provides probing questions to enhance analytical value and depth"
+      "capabilities": "Analyzes project insights, suggests additional analyses, and provides probing questions to enhance analytical value and depth. Best for iterating on expanding an input or refining an idea before going back to other agents."
     },
     {
       "name": "NEAR Blockchain Analyst",
@@ -14,6 +14,11 @@
       "name": "Expert-EVM",
       "slug": "expert-evm",
       "capabilities": "Flipside compliant Snowflake SQL generator for Ethereum Virtual Machine (EVM) chains including arbitrum, avalanche, base, blast, bsc, ethereum, gnosis, ink, kaia, mantle, optimism, polygon. Include 'STRICT MODE' in the request to get exclusively a SQL response with no ``` markdown. Returns a list of text (the response) and usage (tokens used)"
+    },
+    {
+      "name": "JSON Responder",
+      "slug": "json-responder",
+      "capabilities": "Takes any generic request, and always responds with JSON. It may add keys or introduce other data not asked for. The main purpose is to confirm JSON formatting. Provide the keys and all content in 1 shot when interacting with the responder."
     }
   ]
 }

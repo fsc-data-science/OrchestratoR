@@ -17,3 +17,7 @@ lapply(avax_weekly_dex_volume, function(x){
   cat(x$content)
 })
 
+ethereum_nft_sales_monthly <- run_orchestrator("ETH NFT sales monthly ETH token only")
+
+
+

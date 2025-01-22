@@ -2,11 +2,42 @@ source("libraries.R")
 
 run_orchestrator <- function(input, max_tokens = 100000) {
 
+  # List all files in template directory
+  files_ <- list.files("report-template", full.names = TRUE)
+  
+  suggested_names <- ask_flipai(slug = "json-responder",
+             content =  paste0(
+               "Using the following user request to create 3 file names directory_name, report_file_name, report_title. No file types needed just the 3 names in JSON: ",
+               input
+               )
+             )
+  
+  tryCatch(
+    {
+  suggested_names <- fromJSON(suggested_names$text)
+      }, 
+           error = function(e) {
+             stop("can't even get file names structured right lol")
+             }
+           )
+  
+  # Create new directory
+  dir.create(suggested_names$directory_name)
+  
+  # Copy files to new directory
+  file.copy(files, suggested_names$directory_name)
+  
+  file.rename(
+    from = paste0(suggested_names$directory_name, "/template.Rmd"),
+    to = paste0(suggested_names$directory_name,"/", suggested_names$report_file_name, ".Rmd")
+  )
+  
   # Initialize message history with user input
   messages_ <- list(
     list(
       role = "user",
-      content = input
+      content = paste0("Here is the user request: ", input, "\n", "Please note the directory and new template have already been made for you here, directory:", suggested_names$directory_name, "\n",
+      "Report file: ", suggested_names$report_file_name,".Rmd", "\n", "Please interact with only these files, you may title the report as: ", suggested_names$report_title)
     )
   )
   
@@ -72,6 +103,11 @@ run_orchestrator <- function(input, max_tokens = 100000) {
     
     # Check for completion signal
     if (grepl("<COMPLETE>", response_$text)) {
+      
+      rmarkdown::render(paste0(suggested_names$directory_name,"/",suggested_names$report_file_name,".Rmd"),
+                        output_format = "html_document",
+                        output_dir = "output-reports")
+      
       break
     }
     

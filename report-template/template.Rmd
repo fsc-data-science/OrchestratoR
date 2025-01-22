@@ -56,22 +56,3 @@ submitSnowflake <- function(query, creds = snowflake_credentials){
 
 ```
 
-## Example Heading 2
-
-* Example bullet 1 
-* Example bullet 2 
-
-```{r}
-example_sql <- submitSnowflake("select 'bob' as person, 10 as amount from dual")
-```
-
-```{r}
-example_analysis <- mean(example_sql$AMOUNT)
-```
-
-```{r}
-example_plot <- plot_ly() %>% add_trace(data = example_sql, x = ~PERSON, y = ~AMOUNT, type = "bar")
-example_plot
-```
-
-## 

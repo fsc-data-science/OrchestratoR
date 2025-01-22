@@ -1,8 +1,7 @@
+source("libraries.R")
+
 run_orchestrator <- function(input, max_tokens = 100000) {
-  browser()
-  # Create persistent function environment that inherits from global
-  function_env <- new.env(parent = globalenv())
-  
+
   # Initialize message history with user input
   messages_ <- list(
     list(
@@ -18,7 +17,7 @@ run_orchestrator <- function(input, max_tokens = 100000) {
   # Define custom run_r_code that uses persistent environment
   local_run_r_code <- function(code) {
     tryCatch({
-      result <- eval(parse(text = code), envir = function_env)
+      result <- eval(parse(text = code))
       list(
         success = TRUE,
         result = capture.output(print(result))
@@ -36,7 +35,7 @@ run_orchestrator <- function(input, max_tokens = 100000) {
     # Get orchestrator response
     response_ <- ask_flipai(
       slug = "orchestrate-R",
-      messages = messages_
+      content = jsonlite::toJSON(messages_, auto_unbox = TRUE)
     )
     
     # Update token count
@@ -88,5 +87,5 @@ run_orchestrator <- function(input, max_tokens = 100000) {
   }
   
   # Return final message history 
-  return(messages)
+  return(messages_)
 }

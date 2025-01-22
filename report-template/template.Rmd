@@ -20,6 +20,43 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+library(dplyr)
+library(tidymodels)
+library(purrr)
+library(plotly)
+library(httr)
+library(jsonlite)
+library(odbc)
+library(lubridate)
+library(stringr)
+library(scales)
+library(reactable)
+library(rmarkdown)
+library(knitr)
+
+snowflake_credentials <- jsonlite::read_json('snowflake-details.json')
+submitSnowflake <- function(query, creds = snowflake_credentials){
+  
+  connection <- dbConnect(
+    odbc::odbc(),
+    .connection_string = paste0("Driver={",creds$driver,"}",
+                                ";Server={",creds$server_url,
+                                "};uid=",creds$username,
+                                ";role=",creds$role,
+                                ";pwd=",creds$password,
+                                ";warehouse=", creds$warehouse,
+                                ";database=", creds$database)
+  )
+  
+  output <- dbGetQuery(connection, query)
+  dbDisconnect(connection)
+  return(output)
+  
+}
+
+```
+
 # Heading 1
 
 text 

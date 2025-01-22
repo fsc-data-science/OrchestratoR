@@ -38,18 +38,8 @@ submitSnowflake <- function(query, creds = snowflake_credentials){
 ask_flipai <- function(url_ = "https://flip-ai.fly.dev/api/agent/execute",
                        api_key = flipai_secret, 
                        slug, 
-                       messages = NULL, 
                        content = NULL) {
-  # Input validation
-  if (is.null(messages) && is.null(content)) {
-    stop("Either messages or content must be provided")
-  }
-  if (!is.null(messages) && !is.null(content)) {
-    stop("Only one of messages or content should be provided")
-  }
   
-  # Prepare the request body
-  if (is.null(messages)) {
     # Use content parameter
     body <- list(
       slug = slug,
@@ -60,13 +50,7 @@ ask_flipai <- function(url_ = "https://flip-ai.fly.dev/api/agent/execute",
         )
       )
     )
-  } else {
-    # Use messages parameter directly
-    body <- list(
-      slug = slug,
-      messages = messages
-    )
-  }
+ 
   
   # Make the API request
   response <- httr::POST(

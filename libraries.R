@@ -12,6 +12,7 @@ library(reactable)
 library(rmarkdown)
 library(knitr)
 source("extract_code.R")
+source("create_set.R")
 
 flipai_secret <- readLines("flipai_secret.txt")
 snowflake_credentials <- jsonlite::read_json('snowflake-details.json')
@@ -82,6 +83,42 @@ ask_flipai <- function(url_ = "https://flip-ai.fly.dev/api/agent/execute",
   return(parsed_response)
 }
 
+# uses AI to name directory, file, report
+make_directory <- function(input){
+  
+  files_ <- list.files("report-template", full.names = TRUE)
+  
+  suggested_names <- ask_flipai(slug = "json-responder",
+                                content =  paste0(
+                                  "Using the following user request to create 3 file names directory_name, report_file_name, report_title. No file types needed just the 3 names in JSON: ",
+                                  input
+                                )
+  )
+  
+  tryCatch(
+    {
+      suggested_names <- fromJSON(suggested_names$text)
+    }, 
+    error = function(e) {
+      stop("can't even get file names structured right lol")
+    }
+  )
+  
+  # Create new directory
+  dir.create(suggested_names$directory_name)
+  
+  # Copy files to new directory
+  file.copy(files_, suggested_names$directory_name)
+  
+  file.rename(
+    from = paste0(suggested_names$directory_name, "/template.Rmd"),
+    to = paste0(suggested_names$directory_name,"/", suggested_names$report_file_name, ".Rmd")
+  )
+  
+  return(suggested_names)
+}
+
+# appends messages together
 add_message <- function(messages = list(), roles, contents) {
   if (length(roles) != length(contents)) {
     stop("Length of roles must match length of contents")
@@ -97,4 +134,5 @@ add_message <- function(messages = list(), roles, contents) {
   
   return(new_messages)
 }
+
 

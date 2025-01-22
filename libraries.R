@@ -13,6 +13,8 @@ library(rmarkdown)
 library(knitr)
 source("extract_code.R")
 source("create_set.R")
+source("format_set.R")
+source("write_sets.R")
 
 flipai_secret <- readLines("flipai_secret.txt")
 snowflake_credentials <- jsonlite::read_json('snowflake-details.json')

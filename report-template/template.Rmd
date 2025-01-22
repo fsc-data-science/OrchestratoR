@@ -16,17 +16,14 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r}
+```{r, warning=FALSE, message=FALSE}
 library(dplyr)
 library(tidymodels)
 library(purrr)
 library(plotly)
 library(httr)
 library(jsonlite)
+library(DBI)
 library(odbc)
 library(lubridate)
 library(stringr)
@@ -55,14 +52,4 @@ submitSnowflake <- function(query, creds = snowflake_credentials){
   
 }
 
-```
-
-# Heading 1
-
-text 
-
-## Heading 2
-
-```{r}
-x = 1:3
 ```

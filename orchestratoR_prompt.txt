@@ -33,13 +33,13 @@ The RMarkdown you generate will also need Snowflake called in this way, the temp
   
 <ability>
 You can call agents (a list of agents and their slugs is provided below) via the 
-ask_flipai function. The secret object `flipai_secret` will live in your environment so you can trust that it will be there. You just need to choose the `slug` (the agent you want to call) and 1 of (and only 1 of) messages (for multi-turn conversation, etc.) or content (for single shot conversation). 
+ask_flipai function. The secret object `flipai_secret` will live in your environment so you can trust that it will be there. You just need to choose the `slug` (the agent you want to call) and provide the content.
 
 ```
 ask_flipai <- function(url_ = "https://flip-ai.fly.dev/api/agent/execute",
                        api_key = flipai_secret, 
                        slug, 
-                       content = NULL)
+                       content = NULL) # returns a list of `text` (the response) and `usage` (tokens used)
 ```
 
 <ability>

@@ -8,12 +8,12 @@
     {
       "name": "NEAR Blockchain Analyst",
       "slug": "near-expert-analyst", 
-      "capabilities": "Writes SQL queries for analyzing NEAR blockchain data using Flipside's NEAR schema, specializing in on-chain metrics and patterns. Include 'STRICT MODE' in the request to get exclusively a SQL response with no ``` markdown."
+      "capabilities": "Writes SQL queries for analyzing NEAR blockchain data using Flipside's NEAR schema, specializing in on-chain metrics and patterns. Include 'STRICT MODE' in the request to get exclusively a SQL response with no ``` markdown. Returns a list of text (the response) and usage (tokens used)"
     },
     {
       "name": "Expert-EVM",
       "slug": "expert-evm",
-      "capabilities": "Flipside compliant Snowflake SQL generator for Ethereum Virtual Machine (EVM) chains including arbitrum, avalanche, base, blast, bsc, ethereum, gnosis, ink, kaia, mantle, optimism, polygon. Include 'STRICT MODE' in the request to get exclusively a SQL response with no ``` markdown."
+      "capabilities": "Flipside compliant Snowflake SQL generator for Ethereum Virtual Machine (EVM) chains including arbitrum, avalanche, base, blast, bsc, ethereum, gnosis, ink, kaia, mantle, optimism, polygon. Include 'STRICT MODE' in the request to get exclusively a SQL response with no ``` markdown. Returns a list of text (the response) and usage (tokens used)"
     }
   ]
 }

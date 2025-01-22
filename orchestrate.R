@@ -1,15 +1,19 @@
 source("libraries.R")
 
 run_orchestrator <- function(input, max_tokens = 100000) {
-
- suggested_names <- make_directory(input)
- 
+  
+  suggested_names <- make_directory(input)
+  
   # Initialize message history with user input
   messages_ <- list(
     list(
       role = "user",
-      content = paste0("Here is the user request: ", input, "\n", "Please note the directory and new template have already been made for you here, directory:", suggested_names$directory_name, "\n",
-      "Report file: ", suggested_names$report_file_name,".Rmd", "\n", "Please interact with only these files, you may title the report as: ", suggested_names$report_title)
+      content = paste0("Here is the user request: ", input, "\n", 
+                       "Please note the directory and new template have already been made for you here, directory:", 
+                       suggested_names$directory_name, "\n",
+                       "Report file: ", suggested_names$report_file_name,".Rmd", "\n", 
+                       "Please interact with only these files, you may title the report as: ", 
+                       suggested_names$report_title)
     )
   )
   
@@ -77,23 +81,53 @@ run_orchestrator <- function(input, max_tokens = 100000) {
     if (grepl("<COMPLETE>", response_$text)) {
       
       tryCatch({
-        # Try to render
-        rmarkdown::render(paste0(suggested_names$directory_name,"/",suggested_names$report_file_name,".Rmd"),
-                          output_format = "html_document", 
+        # List all JSON files in directory
+        json_files <- list.files(
+          path = suggested_names$directory_name, 
+          pattern = "\\.json$", 
+          full.names = TRUE
+        )
+        
+        # Filter out snowflake-details.json
+        json_files <- json_files[!grepl("snowflake-details\\.json$", json_files)]
+        
+        if(length(json_files) == 0) {
+          stop("No valid JSON set files found in directory")
+        }
+        
+        # Define input and output files
+        template_file <- file.path(suggested_names$directory_name, 
+                                   paste0(suggested_names$report_file_name, ".Rmd"))
+        output_file <- file.path("output-reports", 
+                                 paste0(suggested_names$report_file_name, "_complete.Rmd"))
+        
+        # Write combined sets
+        write_sets(
+          json_files = json_files,
+          template_file = template_file,
+          output_file = output_file
+        )
+        
+        # Try to render the combined output
+        rmarkdown::render(output_file,
+                          output_format = "html_document",
                           output_dir = "output-reports")
+        
         break
         
       }, error = function(e) {
         # On error, read the full report
-        current_report <- readLines(paste0(suggested_names$directory_name,"/",suggested_names$report_file_name,".Rmd"))
+        template_file <- file.path(suggested_names$directory_name, 
+                                   paste0(suggested_names$report_file_name, ".Rmd"))
+        current_report <- readLines(template_file)
         report_text <- paste0(current_report, collapse = "\n")
         
         # Ask orchestrator to review and fix
         fix_response <- ask_flipai(
           slug = "orchestrate-R",
           content = paste0(
-            "Error rendering report: ", e$message, "\n",
-            "Please review this RMarkdown file, identify any issues, and provide a single code block to fix them:\n\n",
+            "Error in processing or rendering report: ", e$message, "\n",
+            "Please review this RMarkdown file and JSON files in directory, identify any issues, and provide a single code block to fix them:\n\n",
             report_text
           )
         )
@@ -110,8 +144,24 @@ run_orchestrator <- function(input, max_tokens = 100000) {
             contents = paste0("Fix attempt: ", fix_response$text)
           )
           
-          # Try render again
-          rmarkdown::render(paste0(suggested_names$directory_name,"/",suggested_names$report_file_name,".Rmd"),
+          # Try the write and render process again
+          json_files <- list.files(
+            path = suggested_names$directory_name, 
+            pattern = "\\.json$", 
+            full.names = TRUE
+          )
+          json_files <- json_files[!grepl("snowflake-details\\.json$", json_files)]
+          
+          output_file <- file.path("output-reports", 
+                                   paste0(suggested_names$report_file_name, "_complete.Rmd"))
+          
+          write_sets(
+            json_files = json_files,
+            template_file = template_file,
+            output_file = output_file
+          )
+          
+          rmarkdown::render(output_file,
                             output_format = "html_document",
                             output_dir = "output-reports")
         }

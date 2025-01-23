@@ -16,6 +16,21 @@
       "capabilities": "Flipside compliant Snowflake SQL generator for Ethereum Virtual Machine (EVM) chains including arbitrum, avalanche, base, blast, bsc, ethereum, gnosis, ink, kaia, mantle, optimism, polygon. Include 'STRICT MODE' in the request to get exclusively a SQL response with no ``` markdown. Returns a list of text (the response) and usage (tokens used)"
     },
     {
+      "name": "Expert-Aptos",
+      "slug": "expert-aptos",
+      "capabilities": "Flipside compliant Snowflake SQL generator for the Aptos blockchain. Include 'STRICT MODE' in the request to get exclusively a SQL response with no ``` markdown. Returns a list of text (the response) and usage (tokens used)"
+    },
+    {
+      "name": "Expert-SVM",
+      "slug": "expert-svm",
+      "capabilities": "Flipside compliant Snowflake SQL generator for Solana Virtual Machine (SVM) chains including solana and eclipse. Include 'STRICT MODE' in the request to get exclusively a SQL response with no ``` markdown. Returns a list of text (the response) and usage (tokens used)"
+    },
+        {
+      "name": "Expert-Flipside-Scores",
+      "slug": "expert-flipside-scores",
+      "capabilities": "Flipside compliant Snowflake SQL generator for analytics on Flipside User Scores. User scores are 90-day rolling aggregate scores assessing user quality by count and variety of transaction type. Typically only use this to get specific filters of addresses by score on a date(s) on a chain(s). And then use that as a CTE to filter other queries provided by other expert agents. Include 'STRICT MODE' in the request to get exclusively a SQL response with no ``` markdown. Returns a list of text (the response) and usage (tokens used)"
+    },
+    {
       "name": "JSON Responder",
       "slug": "json-responder",
       "capabilities": "Takes any generic request, and always responds with JSON. It may add keys or introduce other data not asked for. The main purpose is to confirm JSON formatting. Provide the keys and all content in 1 shot when interacting with the responder."

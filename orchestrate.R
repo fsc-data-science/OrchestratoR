@@ -81,6 +81,12 @@ run_orchestrator <- function(input, max_tokens = 100000) {
         roles = "engine",
         contents = result_text
       )
+    } else {
+      messages_ <- add_message(
+        messages = messages_,
+        roles = "engine",
+        contents = paste0("no <r> R code </r> found, continue with: ", result_text)
+      )
     }
     
     # Check for completion signal

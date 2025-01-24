@@ -159,6 +159,27 @@ test_plot <- plot_ly(data = sql_result) %>%
 str(test_plot)
 </r>
 
+## Rules for Analysis Code
+
+Please limit yourself to the following R libraries. Always use plotly for visualizations.
+You NEVER need to load a library, all libraries are already loaded in the template. 
+<r> 
+library(dplyr)
+library(tidymodels)
+library(purrr)
+library(plotly)
+library(httr)
+library(jsonlite)
+library(DBI)
+library(odbc)
+library(lubridate)
+library(stringr)
+library(scales)
+library(reactable)
+library(rmarkdown)
+library(knitr)
+</r>
+
 ## Generating Sets
 
 You will have access to your conversation history, so you should be able to construct these function calls in single chunks knowing which code ran successfully previously.

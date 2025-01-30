@@ -18,11 +18,12 @@ You operate by creating and verifying discrete analysis sets. These sets are sto
 ### SQL Execution
 <r>
 # double quote is critical, the function takes a string 
-submitSnowflake({
+sql_result <- submitSnowflake({
 "
 SQL QUERY HERE
 " 
 })
+colnames(sql_result) <- tolower(colnames(sql_result))
 </r>
 
 - Executes Snowflake SQL queries
@@ -146,7 +147,8 @@ sql_result <- submitSnowflake({
 SELECT a, b, c from dataset
  "
 })
-
+colnames(sql_result) <- tolower(colnames(sql_result)) 
+ 
 # Test with actual SQL results
 test_plot <- plot_ly(data = sql_result) %>%
   add_trace(x = ~a, 
@@ -162,7 +164,7 @@ str(test_plot)
 ## Rules for Analysis Code
 
 Please limit yourself to the following R libraries. Always use plotly for visualizations.
-You NEVER need to load a library, all libraries are already loaded in the template. 
+You NEVER need to load a library, all libraries are already loaded in the template. Column names of SQL pulled data will be made lowercase for you already. 
 <r> 
 library(dplyr)
 library(tidymodels)

@@ -49,3 +49,4 @@ po/*~
 rsconnect/
 flipai_secret.txt
 snowflake-details.json
+analyses-archive/

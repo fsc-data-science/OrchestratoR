@@ -89,6 +89,7 @@ format_set <- function(set) {
                    set_$sql_chunk$query,
                    "\"",
                    "})",
+                   paste0("colnames(",set_$sql_chunk$object_name,") <- tolower(colnames(",set_$sql_chunk$object_name,")"),
                    "```")
   }
   

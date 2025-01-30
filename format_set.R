@@ -80,7 +80,7 @@ format_set <- function(set) {
   }
   
   # Add SQL chunk if it exists
-  if (!is.null(set_$sql_chunk)) {
+  if (!is.null(set_$sql_chunk$object_name)) {
     rmd_lines <- c(rmd_lines,
                    "",
                    "```{r}",
@@ -89,7 +89,7 @@ format_set <- function(set) {
                    set_$sql_chunk$query,
                    "\"",
                    "})",
-                   paste0("colnames(",set_$sql_chunk$object_name,") <- tolower(colnames(",set_$sql_chunk$object_name,")"),
+                   paste0("colnames(",set_$sql_chunk$object_name,") <- tolower(colnames(", set_$sql_chunk$object_name,"))"),
                    "```")
   }
   

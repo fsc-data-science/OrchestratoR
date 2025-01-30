@@ -170,8 +170,10 @@ run_orchestrator <- function(input, max_tokens = 100000) {
           ))
           json_files <- json_files[!grepl("snowflake-details\\.json$", json_files)]
           
-          output_file <- file.path(paste0(suggested_names$directory_name,"/",
-                                          suggested_names$report_file_name, "_complete.Rmd"))
+          output_file <- file.path(paste0(suggested_names$directory_name,
+                                          "/",
+                                          suggested_names$report_file_name,
+                                          "_complete.Rmd"))
           
           write_sets(
             json_files = json_files,
